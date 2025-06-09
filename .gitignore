@@ -1,0 +1,17 @@
+# Streamlit Secrets
+.streamlit/secrets.toml
+.streamlit/
+
+# Database
+*.db
+app.db
+
+# Python Env
+venv/
+.venv/
+
+#IDE
+.idea/
+__pycache__/
+*.py[cod]
+
