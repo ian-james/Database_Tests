@@ -5,11 +5,15 @@ from models import Project
 
 # ─── 1. Cached “pure data” version of projects ─────────
 @st.cache_data(ttl=300)
-def load_projects_data():
+def load_projects_data() -> list[Project]:
     with get_session() as sess:
-        rows = sess.exec(select(Project)).all()
-    # Turn models into plain dicts
-    return [{"id": p.id, "name": p.name} for p in rows]
+        return (list(
+            sess
+            .exec(select(Project))   # 1) run the SELECT
+            .all())                # 3) get them as a plain list
+        )
+
+
 
 # ─── Streamlit UI ───────────────────────────────────
 def display_projects():
@@ -22,20 +26,20 @@ def display_projects():
         st.subheader("Projects")
         for project in projects:
             # Add a card to display each project
-            with st.expander(project["name"], expanded=False):
-                st.write(f"ID: {project['id']}")
-                st.button("View", key=project["id"], on_click=display_project, args=(project["id"],))
+            with st.expander( project.name, expanded=False):
+                st.write(f"ID: {project.id}")
+                st.button("View", key=project.id, on_click=display_project, args=(project.id,))
 
     add_project_form()
 
 def display_project( project_id):
     projects = load_projects_data()
-    project = next((p for p in projects if p["id"] == project_id), None)
+    project = next((p for p in projects if p.id == project_id), None)
 
     if project:
-        st.subheader(f"Project: {project['name']}")
-        st.write(f"ID: {project['id']}")
-        st.write(f"Description: {project.get('description', 'No description provided')}")
+        st.subheader(f"Project: {project.name}")
+        st.write(f"ID: {project.id}")
+        st.write(f"Description: {project.description}")
     else:
         st.error("Project not found.")
 

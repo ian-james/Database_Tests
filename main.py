@@ -3,7 +3,9 @@ from sqlmodel import Session, select
 from typing import List
 
 from setup_database import create_db_and_tables
-from models import Person, Task, Project
+from models import Person, Task, Project,Tag
+
+from generic_form_from_sqlmodel import generate_form
 
 # ─── Engine & Session ─────────────────────────
 engine = create_db_and_tables("my_app.db")
@@ -23,7 +25,7 @@ def load_projects() -> List[Project]:
 
 # ─── App Layout ────────────────────────────────
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to", ["Add Person", "Add Project", "Add Task", "View Data"])
+page = st.sidebar.radio("Go to", ["Add Person", "Add Project", "Add Task", "View Data", "Add Tags", "Add Project", "Task"])
 
 # ─── Add Person ────────────────────────────────
 if page == "Add Person":
@@ -119,3 +121,6 @@ elif page == "View Data":
         } for t in tks])
     else:
         st.info("No tasks yet.")
+
+
+

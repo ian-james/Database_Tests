@@ -1,13 +1,24 @@
 import streamlit as st
 from sqlmodel import SQLModel, create_engine, Session, select
-from models import Person, Task
-from streamlit_setup_database import get_session
-from streamlit_person_view import load_people_data
 
+from models import Task
+from streamlit_setup_database import get_session
+from generic_form_from_sqlmodel import create_and_add, generate_form
+
+# @st.cache_resource
+# def load_tasks_data():
+#     with get_session() as sess:
+#         tasks = sess.exec(select(Task)).all()
+#     # Convert models to plain dicts
+#     return [task.model_dump(exclude_none=True) for task in tasks]
+
+@st.cache_resource
+def load_tasks_data():
+    with get_session() as sess:
+       return list(sess.exec(select(Task)).all())
 
 def display_task_list():
-    with get_session() as sess:
-        tasks = sess.exec(select(Task)).all()
+    tasks = load_tasks_data()
 
     if not tasks:
         st.info("No tasks found.")
@@ -21,30 +32,8 @@ def display_task_list():
         st.markdown("---")
 
 def display_task_form(people):
-    with st.form("task_form"):
-        t_title       = st.text_input("Title")
-        t_description = st.text_area("Description")
-        t_time        = st.number_input("Time on task (hrs)", min_value=0.0, step=0.25)
-        t_completed   = st.checkbox("Completed", value=False)
-        t_person      = st.selectbox(
-            "Assign to",
-            options=people,
-            format_func=lambda d: d["name"]
-        )
-
-        if st.form_submit_button("Add Task"):
-            try:
-                with get_session() as sess:
-                    sess.add(Task(
-                        title=t_title,
-                        description=t_description,
-                        time_on_task=t_time or None,
-                        completed=t_completed,
-                        person_id=t_person["id"]
-                    ))
-                    sess.commit()
-                st.success(f"✅ Task “{t_title}” added to {t_person['name']}")
-                load_people_data.clear()  # invalidate cache if needed elsewhere
-            except Exception as e:
-                st.error("❌ Could not add task.")
-                st.exception(e)
+    with get_session() as session:
+        form_data = generate_form(Task)
+        if form_data:
+            task = create_and_add(session, Task, form_data)
+            st.success(f"Created task: {task.id} {task.title}")
