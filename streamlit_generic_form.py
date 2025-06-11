@@ -5,27 +5,6 @@ from enum import Enum
 import inspect
 from sqlmodel import SQLModel, Session
 
-
-# --- Generic creator helper ---
-def create_and_add(
-    sess: Session,
-    model: Type[SQLModel],
-    data: Dict[str, Any],
-    commit: bool = True
-) -> SQLModel:
-    """
-    Instantiate and persist a SQLModel from a dict of values.
-    Filters out keys the model doesn't accept.
-    """
-    valid_keys = set(model.getFields().keys())
-    filtered = {k: v for k, v in data.items() if k in valid_keys}
-    instance = model(**filtered)
-    sess.add(instance)
-    if commit:
-        sess.commit()
-        sess.refresh(instance)
-    return instance
-
 # --- Field Introspection Helpers ---
 def get_field_meta(field: Any) -> Dict[str, Any]:
     name = getattr(field, 'name', None)

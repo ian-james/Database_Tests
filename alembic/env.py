@@ -1,7 +1,9 @@
+import os
 import pathlib
 import tomllib
 from logging.config import fileConfig
 
+from dotenv import load_dotenv
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
@@ -10,10 +12,9 @@ from alembic import context
 base = pathlib.Path(__file__).parent.parent
 secrets_path = base / ".streamlit" / "secrets.toml"
 
-with open(secrets_path, "rb") as f:
-    secrets = tomllib.load(f)
+load_dotenv()
 
-db_url = secrets["database"]["url"]
+db_url = os.environ["DATABASE_URL"]
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

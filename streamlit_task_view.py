@@ -2,8 +2,8 @@ import streamlit as st
 from sqlmodel import SQLModel, create_engine, Session, select
 
 from models import Task
-from streamlit_setup_database import get_session
-from generic_form_from_sqlmodel import create_and_add, generate_form
+from setup_database import get_session
+from streamlit_generic_form import create_and_add, generate_form
 
 # @st.cache_resource
 # def load_tasks_data():

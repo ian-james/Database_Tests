@@ -1,6 +1,7 @@
 # Streamlit Secrets
 .streamlit/secrets.toml
 .streamlit/
+.env
 
 # Database
 *.db

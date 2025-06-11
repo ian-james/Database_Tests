@@ -1,6 +1,6 @@
 import streamlit as st
 from sqlmodel import select
-from streamlit_setup_database import get_session
+from setup_database import get_session
 from models import Project
 
 # ─── 1. Cached “pure data” version of projects ─────────

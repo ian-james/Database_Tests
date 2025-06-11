@@ -5,7 +5,7 @@ from typing import List
 from setup_database import create_db_and_tables
 from models import Person, Task, Project,Tag
 
-from generic_form_from_sqlmodel import generate_form
+from streamlit_generic_form import generate_form
 
 # ─── Engine & Session ─────────────────────────
 engine = create_db_and_tables("my_app.db")

@@ -5,7 +5,7 @@ from streamlit_person_view import load_people_data, display_people, display_add_
 from streamlit_task_view import display_task_form, display_task_list
 from streamlit_show_all_info import show_all_data
 from streamlit_project_view import display_projects, add_project_form
-from generic_form_from_sqlmodel import generate_form
+from streamlit_generic_form import generate_form
 from models import Tag
 
 # TODO:

@@ -1,7 +1,7 @@
 import streamlit as st
 from sqlmodel import SQLModel, create_engine, Session, select
 from models import Person, Task, Project
-from streamlit_setup_database import get_session
+from setup_database import get_session
 from streamlit_person_view import load_people_data
 from streamlit_task_view import load_tasks_data
 from streamlit_project_view import load_projects_data
