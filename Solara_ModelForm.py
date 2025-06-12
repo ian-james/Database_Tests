@@ -1,8 +1,7 @@
 import solara
 from typing import Sequence, Any, Callable, Type
-
 from sqlmodel import SQLModel
-
+from render_ui_fields import renderInputType
 
 @solara.component
 def ModelForm( *,
@@ -22,17 +21,8 @@ def ModelForm( *,
     with solara.Card(f"Add/Edit {model.__name__}"):
         for f in fields:
             value, set_value = state[f]
+            renderInputType(f.capitalize(), value, set_value)
 
-            if isinstance(value, bool):
-                solara.Checkbox(label=f.capitalize(), value=value, on_value=set_value)
-            elif isinstance(value, float):
-                solara.InputFloat(label=f.capitalize(), value=value, on_value=set_value)
-            elif isinstance(value, int):
-                solara.InputInt(label=f.capitalize(), value=value, on_value=set_value)
-
-            else:
-                solara.InputText(label=f.capitalize(), value=value, on_value=set_value)
-
-        if solara.Button("Submit"):
-            payload = {f: state[f][0] for f in fields}
-            on_submit(model,payload)
+        solara.Button(label="Submit",
+            on_click=lambda: on_submit(model, {field: state[field][0] for field in fields})
+        )

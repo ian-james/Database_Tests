@@ -1,7 +1,7 @@
-from solara.server.settings import session
-from sqlmodel import select
+from typing import Type
+from sqlmodel import select, SQLModel
+from setup_database import get_session
 
-from main import get_session
 from models import Person, Task
 
 # @solara.cache(ttl=300)
@@ -9,14 +9,18 @@ def load_people() -> list[Person]:
     with get_session() as sess:
         return list(sess.exec(select(Person)).all())
 
+def load_all_database_items(model: Type[SQLModel]) -> list[SQLModel]:
+    with get_session() as sess:
+        return list(sess.exec(select(model)).all())
+
 
 # @solara.cache(ttl=300)
 def load_tasks(person_id: int | None = None) -> list[Task]:
-    selectTask = select(Task)
+    select_task = select(Task)
     if person_id is None:
-        selectTask = selectTask.where(Task.person_id.is_(None))
+        select_task = select_task.where(Task.person_id.is_(None))
     else:
-        selectTask = selectTask.where(Task.person_id == person_id)
+        select_task = select_task.where(Task.person_id == person_id)
 
     with get_session() as sess:
-        return list(sess.exec(selectTask).all())
+        return list(sess.exec(select_task).all())

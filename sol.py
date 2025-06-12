@@ -3,6 +3,7 @@ from typing import Type
 from sqlmodel import SQLModel
 
 from Solara_ModelForm import ModelForm
+from Solara_Table import ModelTable
 from setup_database import get_session, create_and_add
 
 from models import Person
@@ -21,6 +22,9 @@ def Page():
 
     if status:
         solara.Success(status)
+
+    solara.Markdown("## People List")
+    ModelTable(Person, items_per_page=10)
 
 def main():
     Page()
