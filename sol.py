@@ -2,6 +2,7 @@ import solara
 from typing import Type
 from sqlmodel import SQLModel
 
+from Solara_EditableTable import EditableSQLModelTable
 from Solara_ModelForm import ModelForm
 from Solara_Table import ModelTable
 from setup_database import get_session, create_and_add
@@ -25,6 +26,9 @@ def Page():
 
     solara.Markdown("## People List")
     ModelTable(Person, items_per_page=10)
+
+    solara.Markdown("## Editable People Table")
+    EditableSQLModelTable(model=Person, fields=["name", "age", "height"])
 
 def main():
     Page()
